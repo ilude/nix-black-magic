@@ -10,16 +10,16 @@ boot: build
 
 build: $(IMAGE_FILE)
 
-production:
-	$(MAKE) build BUILD_ENVIRONMENT=production
-
-$(IMAGE_FILE) flake.lock: flake.nix qcow.nix configuration.nix
-	nix build --impure .#nixosConfigurations.build-qcow2-$(BUILD_ENVIRONMENT).config.system.build.qcow2
+$(IMAGE_FILE): flake.lock
 	mkdir -p output
 	cp -f result/nixos.qcow2 $(IMAGE_FILE)
 	chmod 644 $(IMAGE_FILE)
-	touch flake.lock
+	
+
+flake.lock: flake.nix build-image.nix configuration.nix
+	nix build --impure .#nixosConfigurations.build-qcow2-$(BUILD_ENVIRONMENT).config.system.build.qcow2
 
 .PHONY: production clean
+production:
 clean:
 	rm -f $(IMAGE_FILE)

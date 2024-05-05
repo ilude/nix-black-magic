@@ -8,7 +8,7 @@
       system = "x86_64-linux";
       commonModules = [
         ./configuration.nix
-        ./qcow.nix
+        ./build-image.nix
       ];
     in
     {
